@@ -1,24 +1,28 @@
 import React, { useEffect } from 'react';
 import {useState} from 'react';
-import Login from '../components/Login.jsx'
+import Login from '../components/Login.jsx';
+import Logout from "./Logout";
+import {useAuth} from "../context/AuthProvider";
 
 
 function Navbar() { 
+  
+   const [authUser, setAuthUser] = useAuth();
+   const [theme,setTheme] = useState(localStorage.getItem("theme")?localStorage.getItem('theme') :"light")
 
-    const [theme,setTheme] = useState(localStorage.getItem("theme")?localStorage.getItem('theme') :"light")
     const element=document.documentElement;  
-    useEffect(() =>{
+    useEffect(() => {
       if(theme === 'dark'){
         element.classList.add('dark');
         localStorage.setItem('theme','dark')
         document.body.classList.add('dark')
-      }else{
+      }else {
         element.classList.remove('dark')
         localStorage.setItem('theme','light')
         document.body.classList.remove('dark')
       }
 
-    },[theme])
+    },[theme]);
 
     const navItems = (
         <>
@@ -121,14 +125,16 @@ function Navbar() {
   </svg>
 </label>
 
+
+
  {/* login btn */}
 
-    {/* <a className="bg-black text-white  px-4 py-2  ml-10 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
+     {/* <a className="bg-black text-white  px-4 py-2  ml-10 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
     
        onClick={()=> document.getElementById('my_modal_3').showModel()}
        >
       Login
-      </a> */}
+      </a>  */}
       <Login />
   </div>
   </div>
