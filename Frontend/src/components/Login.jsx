@@ -2,9 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
-// import toast from 'react-hot-toast';
+import { useAuth } from "../context/AuthProvider.jsx";
+
+
 
 function Login() {
+  const [, setAuthUser] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -13,37 +17,38 @@ function Login() {
 
   const onSubmit = async (data) => {
     const userInfo = {
-      
-      email:data.email,
-      password:data.password
-    }
-
-    // ye info to store karna hai to  apis ko call akrge to axios to use karge //
-
-   await axios.post("http://localhost:4001/user/login", userInfo)
-    .then((res) => {
-      console.log(res.data)
-      if(res.data){
-        alert("Loggedin Sucessfully");
+      email: data.email,
+      password: data.password,
+    };
+  
+    try {
+      const res = await axios.post(
+        "http://localhost:4001/user/login",
+        userInfo
+      );
+  
+      if (res.data) {
+        alert("Logged in successfully");
+  
+        // ✅ save user
+        localStorage.setItem(
+          "Users",
+          JSON.stringify(res.data.user)
+        );
+  
+        // ✅ update auth context
+        setAuthUser(res.data.user);
+  
+        // ✅ close modal
         document.getElementById("my_modal_3").close();
-
-        setTimeout(() =>{
-         
-          windows.loaction.reload();
-          localStorage.setItem('Users',JSON.stringify(res.data.user));
-        },3000);   
-            
       }
-    }).catch((err) => {
-     if(err.response){
-       console.log(err);
-       alert('Error:' + err.response.data.message)
-       setTimeout(()=>{},3000)
-     
-     }
-    })
-
-  }
+    } catch (err) {
+      if (err.response) {
+        alert("Error: " + err.response.data.message);
+      }
+    }
+  };
+  
 
   return (
    
@@ -52,10 +57,8 @@ function Login() {
     
       <button
         className=" bg-black text-white  px-4 py-2  ml-10 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
-        onClick={() => document.getElementById("my_modal_3").showModal()}
-      >
-        Login
-      </button>
+        onClick={() => document.getElementById("my_modal_3").showModal()} >
+        Login</button>
 
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box">

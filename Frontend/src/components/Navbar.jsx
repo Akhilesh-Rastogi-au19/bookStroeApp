@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import {useState} from 'react';
 import Login from '../components/Login.jsx';
 import Logout from "./Logout";
-import {useAuth} from "../context/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
+
 
 
 function Navbar() { 
   
    const [authUser, setAuthUser] = useAuth();
+  //  console.log(authUser)
    const [theme,setTheme] = useState(localStorage.getItem("theme")?localStorage.getItem('theme') :"light")
 
     const element=document.documentElement;  
@@ -125,17 +127,24 @@ function Navbar() {
   </svg>
 </label>
 
+<div>
+  {authUser ? (
+    <Logout />
+  ) : (
+    <a
+      className=""
+      onClick={() =>
+        document.getElementById("my_modal_3").showModal()
+      }
+    >
+       <Login />
+    </a>
+  
+  )}
+</div>
 
 
- {/* login btn */}
 
-     {/* <a className="bg-black text-white  px-4 py-2  ml-10 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
-    
-       onClick={()=> document.getElementById('my_modal_3').showModel()}
-       >
-      Login
-      </a>  */}
-      <Login />
   </div>
   </div>
   
@@ -144,3 +153,57 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
+// import React, { useEffect, useState } from "react";
+// import Login from "../components/Login";
+// import Logout from "../components/Logout";
+// import { useAuth } from "../context/AuthProvider";
+
+// function Navbar() {
+//   const [authUser] = useAuth();
+//   const [theme, setTheme] = useState(
+//     localStorage.getItem("theme") || "light"
+//   );
+
+//   useEffect(() => {
+//     document.documentElement.classList.toggle("dark", theme === "dark");
+//     localStorage.setItem("theme", theme);
+//   }, [theme]);
+
+//   return (
+//     <div className="navbar bg-base-100 px-10 fixed top-0 z-50">
+//       <div className="flex-1 text-xl font-bold">bookStore</div>
+
+//       <div className="flex gap-4 items-center">
+//         {/* Theme */}
+//         <input
+//           type="checkbox"
+//           checked={theme === "dark"}
+//           onChange={() =>
+//             setTheme(theme === "dark" ? "light" : "dark")
+//           }
+//         />
+
+//         {/* Auth */}
+//         {authUser ? (
+//           <Logout />
+//         ) : (
+//           <>
+//             <button
+//               className="bg-black text-white px-4 py-2 rounded-md"
+//               onClick={() =>
+//                 document.getElementById("my_modal_3").showModal()
+//               }
+//             >
+//               Login
+//             </button>
+//             <Login />
+//           </>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Navbar;
